@@ -341,6 +341,28 @@ html[data-theme-preference="high-contrast"] .nav-glass-btn {
   background: var(--empty-state-bg);
 }
 
+/* Apresentação — cores fixas, independente do tema do app */
+.presentation-deck {
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
+  --surface: #ffffff;
+  --surface-hover: rgba(0, 0, 0, 0.04);
+  --input-bg: rgba(0, 0, 0, 0.05);
+  --muted: #86868b;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #e17b21;
+  --accent-dark: #1b2d3a;
+  --on-accent-dark: #ffffff;
+  --on-accent: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --surface-subtle: #efeff4;
+  --pill-active-bg: #1b2d3a;
+  --pill-active-fg: #ffffff;
+  color-scheme: light;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
 /* Leaflet — cores do tema do app */
 .leaflet-container {
   background: var(--surface-subtle);

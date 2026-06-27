@@ -27,15 +27,15 @@ export function PhoneFrame({
   return (
     <div
       className={cn(
-        "mx-auto w-full max-w-[280px] rounded-[2rem] border-[6px] border-accent-dark/90 bg-accent-dark p-1.5 shadow-[0_24px_60px_rgba(0,0,0,.35)]",
+        "mx-auto w-full max-w-[280px] rounded-[2rem] border-[6px] border-[#1b2d3a]/90 bg-[#1b2d3a] p-1.5 shadow-[0_24px_60px_rgba(0,0,0,.35)]",
         className,
       )}
     >
-      <div className="overflow-hidden rounded-[1.4rem] bg-background">
+      <div className="overflow-hidden rounded-[1.4rem] bg-[#f5f5f7]">
         <div className="flex items-center justify-between px-5 pt-2 pb-1">
-          <span className="text-[10px] font-semibold text-accent-dark">9:41</span>
-          <div className="h-4 w-16 rounded-full bg-accent-dark/90" />
-          <span className="text-[10px] font-semibold text-accent-dark">100%</span>
+          <span className="text-[10px] font-semibold text-[#1b2d3a]">9:41</span>
+          <div className="h-4 w-16 rounded-full bg-[#1b2d3a]/90" />
+          <span className="text-[10px] font-semibold text-[#1b2d3a]">100%</span>
         </div>
         <div className="max-h-[420px] overflow-hidden">{children}</div>
         <MockBottomNav active={active} />
@@ -394,14 +394,14 @@ export function DemoSlideLayout({
     <div
       className={cn(
         "flex h-full min-h-[100dvh] w-full flex-col items-center justify-center gap-6 px-6 py-10 sm:flex-row sm:gap-12 sm:px-12",
-        tone === "dark" ? "bg-accent-dark text-on-accent-dark" : "bg-background text-accent-dark",
+        tone === "dark" ? "bg-[#1b2d3a] text-white" : "bg-[#f5f5f7] text-[#1b2d3a]",
       )}
     >
       <div className="max-w-sm shrink-0 text-center sm:text-left">
         <span
           className={cn(
             "inline-block rounded-full px-3 py-1 text-[10px] font-bold tracking-widest uppercase",
-            tone === "dark" ? "bg-white/10 text-white/80" : "bg-accent/10 text-accent",
+            tone === "dark" ? "bg-white/10 text-white/80" : "bg-[#e17b21]/10 text-[#e17b21]",
           )}
         >
           {step}
@@ -411,7 +411,7 @@ export function DemoSlideLayout({
           <p
             className={cn(
               "mt-2 text-sm leading-relaxed sm:text-base",
-              tone === "dark" ? "text-white/70" : "text-muted",
+              tone === "dark" ? "text-white/70" : "text-[#86868b]",
             )}
           >
             {subtitle}

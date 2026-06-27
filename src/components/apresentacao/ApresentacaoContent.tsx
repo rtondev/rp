@@ -43,25 +43,25 @@ const toneStyles: Record<
   { bg: string; text: string; muted: string; step: string; eyebrow: string }
 > = {
   dark: {
-    bg: "bg-accent-dark",
-    text: "text-on-accent-dark",
-    muted: "text-on-accent-dark/70",
-    step: "bg-accent text-on-accent",
-    eyebrow: "text-accent",
+    bg: "bg-[#1b2d3a]",
+    text: "text-white",
+    muted: "text-white/70",
+    step: "bg-[#e17b21] text-white",
+    eyebrow: "text-[#e17b21]",
   },
   light: {
-    bg: "bg-background",
-    text: "text-accent-dark",
-    muted: "text-muted",
-    step: "bg-accent text-on-accent",
-    eyebrow: "text-accent",
+    bg: "bg-[#f5f5f7]",
+    text: "text-[#1b2d3a]",
+    muted: "text-[#86868b]",
+    step: "bg-[#e17b21] text-white",
+    eyebrow: "text-[#e17b21]",
   },
   accent: {
-    bg: "bg-accent",
-    text: "text-on-accent",
-    muted: "text-on-accent/85",
-    step: "bg-white/20 text-on-accent",
-    eyebrow: "text-on-accent/80",
+    bg: "bg-[#e17b21]",
+    text: "text-white",
+    muted: "text-white/85",
+    step: "bg-white/20 text-white",
+    eyebrow: "text-white/80",
   },
 };
 
@@ -401,7 +401,7 @@ const SLIDES: Slide[] = [
   {
     id: "obrigado",
     render: () => (
-      <SlideShell tone="dark" className="text-center">
+      <SlideShell tone="accent" className="text-center">
         <div className="flex flex-col items-center gap-6">
           <Image
             src="/logo.svg"
@@ -435,7 +435,7 @@ const SLIDES: Slide[] = [
           <p className="text-sm opacity-60">Perguntas?</p>
           <Link
             href="/"
-            className="mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-on-accent transition hover:opacity-90"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#1b2d3a] px-6 py-3 text-sm font-bold text-white transition hover:opacity-90"
           >
             Abrir a plataforma
             <ArrowRight size={16} weight="bold" />
@@ -482,7 +482,7 @@ export function ApresentacaoContent() {
   }, [go, total]);
 
   return (
-    <div className="relative min-h-[100dvh] overflow-hidden bg-background">
+    <div className="presentation-deck fixed inset-0 z-50 min-h-[100dvh] overflow-hidden">
       <div
         className="flex transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -541,7 +541,7 @@ export function ApresentacaoContent() {
             onClick={() => setIndex(i)}
             className={cn(
               "h-1.5 rounded-full transition-all",
-              i === index ? "w-6 bg-accent" : "w-1.5 bg-black/25 hover:bg-black/40",
+              i === index ? "w-6 bg-[#e17b21]" : "w-1.5 bg-black/25 hover:bg-black/40",
             )}
           />
         ))}
