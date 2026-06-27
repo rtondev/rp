@@ -22,10 +22,8 @@ import { cn } from "@/lib/cn";
 import {
   DemoSlideLayout,
   MockGestorAlertsScreen,
-  MockHomeScreen,
   MockMySignalsScreen,
   MockPlaceDetailScreen,
-  MockPlacesScreen,
   MockSignalScreen,
 } from "@/components/apresentacao/ApresentacaoMockScreens";
 
@@ -240,33 +238,10 @@ const SLIDES: Slide[] = [
     ),
   },
   {
-    id: "demo-home",
-    render: () => (
-      <DemoSlideLayout
-        step="Na prática · 1/5"
-        title="Entra na plataforma"
-        subtitle="Turista acessa pelo celular, vê o mapa e os pontos cadastrados perto de si."
-        screen={<MockHomeScreen />}
-      />
-    ),
-  },
-  {
-    id: "demo-locais",
-    render: () => (
-      <DemoSlideLayout
-        step="Na prática · 2/5"
-        title="Escolhe o ponto"
-        subtitle="Locais cadastrados com categoria, avaliação e distância — outros turistas também consultam."
-        screen={<MockPlacesScreen />}
-        tone="dark"
-      />
-    ),
-  },
-  {
     id: "demo-local",
     render: () => (
       <DemoSlideLayout
-        step="Na prática · 3/5"
+        step="Na prática · 1/3"
         title="QR Code no local"
         subtitle="No estabelecimento ou ponto turístico, escaneia o QR e confirma que está no local certo."
         screen={<MockPlaceDetailScreen />}
@@ -277,7 +252,7 @@ const SLIDES: Slide[] = [
     id: "demo-sinal",
     render: () => (
       <DemoSlideLayout
-        step="Na prática · 4/5"
+        step="Na prática · 2/3"
         title="Sinaliza em tempo real"
         subtitle="Nome e telefone já cadastrados — descreve o problema, envia foto e prioridade no momento."
         screen={<MockSignalScreen />}
@@ -289,7 +264,7 @@ const SLIDES: Slide[] = [
     id: "demo-resposta",
     render: () => (
       <DemoSlideLayout
-        step="Na prática · 5/5"
+        step="Na prática · 3/3"
         title="Resposta e transparência"
         subtitle="Órgão responsável responde pelo sistema. Turista acompanha — e o histórico fica visível mesmo após sanado."
         screen={
