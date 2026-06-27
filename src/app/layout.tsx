@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AppShell } from "@/components/layout/AppShell";
+import { VLibrasWidget } from "@/components/accessibility/VLibrasWidget";
+import { Toaster } from "@/components/ui/Toaster";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Rota Potiguar",
-  description: "Rota Potiguar",
+  description: "Descubra o melhor do Rio Grande do Norte",
   icons: {
     icon: "/icon.svg",
   },
@@ -29,8 +35,21 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme-preference="system"
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script id="theme-init">{themeInitScript}</script>
+      </head>
+      <body className="flex min-h-full flex-col">
+        <ThemeProvider>
+          <AuthProvider>
+            <AppShell>{children}</AppShell>
+            <Toaster />
+          </AuthProvider>
+          <VLibrasWidget />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

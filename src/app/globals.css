@@ -1,26 +1,351 @@
 @import "tailwindcss";
 
+/* —— Tema claro (padrão) —— */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
+  --surface: #ffffff;
+  --surface-hover: rgba(0, 0, 0, 0.04);
+  --input-bg: rgba(0, 0, 0, 0.05);
+  --muted: #86868b;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #e17b21;
+  --accent-dark: #1b2d3a;
+  --on-accent-dark: #ffffff;
+  --accent-hover: #15232d;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --nav-btn-bg: rgba(255, 255, 255, 0.88);
+  --nav-btn-border: rgba(255, 255, 255, 0.9);
+  --nav-btn-shadow: 0 4px 16px rgba(27, 45, 58, 0.12);
+  --nav-btn-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --pill-active-bg: #1b2d3a;
+  --pill-active-fg: #ffffff;
+  --pill-idle-bg: #ffffff;
+  --surface-subtle: #efeff4;
+  --placeholder: #e8e8ed;
+  --overlay: rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-nav: 0 4px 24px rgba(27, 45, 58, 0.08);
+  --star-empty: rgba(134, 134, 139, 0.45);
+  --on-accent: #ffffff;
+  --empty-state-bg: rgba(255, 255, 255, 0.55);
+  --radius: 1rem;
+  color-scheme: light;
+}
+
+/* —— Escuro explícito —— */
+html[data-theme-preference="dark"] {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --surface: #1c1c1e;
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.1);
+  --muted: #98989d;
+  --border: rgba(255, 255, 255, 0.14);
+  --accent-dark: #f5f5f7;
+  --on-accent-dark: #1c1c1e;
+  --accent-hover: #ffffff;
+  --glass-bg: rgba(28, 28, 30, 0.82);
+  --nav-btn-bg: rgba(44, 44, 46, 0.92);
+  --nav-btn-border: rgba(255, 255, 255, 0.12);
+  --nav-btn-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --nav-btn-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --pill-active-bg: #f5f5f7;
+  --pill-active-fg: #1c1c1e;
+  --pill-idle-bg: #2c2c2e;
+  --surface-subtle: #2c2c2e;
+  --placeholder: #3a3a3c;
+  --overlay: rgba(0, 0, 0, 0.65);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --star-empty: rgba(152, 152, 157, 0.55);
+  --on-accent: #ffffff;
+  --empty-state-bg: rgba(28, 28, 30, 0.65);
+  color-scheme: dark;
+}
+
+/* —— Alto contraste explícito —— */
+html[data-theme-preference="high-contrast"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #000000;
+  --surface-hover: #1a1a1a;
+  --input-bg: #000000;
+  --muted: #e0e0e0;
+  --border: #ffffff;
+  --accent: #ffb020;
+  --accent-dark: #ffffff;
+  --on-accent-dark: #000000;
+  --accent-hover: #ffffff;
+  --glass-bg: rgba(0, 0, 0, 0.95);
+  --nav-btn-bg: #000000;
+  --nav-btn-border: #ffffff;
+  --nav-btn-shadow: 0 0 0 2px #ffffff;
+  --nav-btn-inset: none;
+  --pill-active-bg: #ffffff;
+  --pill-active-fg: #000000;
+  --pill-idle-bg: #000000;
+  --surface-subtle: #0a0a0a;
+  --placeholder: #111111;
+  --overlay: rgba(0, 0, 0, 0.85);
+  --shadow-soft: 0 0 0 1px #ffffff;
+  --shadow-nav: 0 0 0 2px #ffffff;
+  --star-empty: #888888;
+  --on-accent: #000000;
+  --empty-state-bg: #000000;
+  color-scheme: dark;
+}
+
+/* —— Sistema: escuro quando o SO pede —— */
+@media (prefers-color-scheme: dark) {
+  html[data-theme-preference="system"] {
+    --background: #000000;
+    --foreground: #f5f5f7;
+    --surface: #1c1c1e;
+    --surface-hover: rgba(255, 255, 255, 0.08);
+    --input-bg: rgba(255, 255, 255, 0.1);
+    --muted: #98989d;
+    --border: rgba(255, 255, 255, 0.14);
+    --accent-dark: #f5f5f7;
+    --on-accent-dark: #1c1c1e;
+    --accent-hover: #ffffff;
+    --glass-bg: rgba(28, 28, 30, 0.82);
+    --nav-btn-bg: rgba(44, 44, 46, 0.92);
+    --nav-btn-border: rgba(255, 255, 255, 0.12);
+    --nav-btn-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+    --nav-btn-inset: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --pill-active-bg: #f5f5f7;
+    --pill-active-fg: #1c1c1e;
+    --pill-idle-bg: #2c2c2e;
+    --surface-subtle: #2c2c2e;
+    --placeholder: #3a3a3c;
+    --overlay: rgba(0, 0, 0, 0.65);
+    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --shadow-nav: 0 4px 24px rgba(0, 0, 0, 0.5);
+    --star-empty: rgba(152, 152, 157, 0.55);
+    --on-accent: #ffffff;
+    --empty-state-bg: rgba(28, 28, 30, 0.65);
+    color-scheme: dark;
+  }
+}
+
+/* —— Sistema: alto contraste do SO (sobrescreve escuro) —— */
+@media (prefers-contrast: more) {
+  html[data-theme-preference="system"] {
+    --background: #000000;
+    --foreground: #ffffff;
+    --surface: #000000;
+    --surface-hover: #1a1a1a;
+    --input-bg: #000000;
+    --muted: #e0e0e0;
+    --border: #ffffff;
+    --accent: #ffb020;
+    --accent-dark: #ffffff;
+    --on-accent-dark: #000000;
+    --accent-hover: #ffffff;
+    --glass-bg: rgba(0, 0, 0, 0.95);
+    --nav-btn-bg: #000000;
+    --nav-btn-border: #ffffff;
+    --nav-btn-shadow: 0 0 0 2px #ffffff;
+    --nav-btn-inset: none;
+    --pill-active-bg: #ffffff;
+    --pill-active-fg: #000000;
+    --pill-idle-bg: #000000;
+    --surface-subtle: #0a0a0a;
+    --placeholder: #111111;
+    --overlay: rgba(0, 0, 0, 0.85);
+    --shadow-soft: 0 0 0 1px #ffffff;
+    --shadow-nav: 0 0 0 2px #ffffff;
+    --star-empty: #888888;
+    --on-accent: #000000;
+    --empty-state-bg: #000000;
+    color-scheme: dark;
+  }
+}
+
+/* —— Claro explícito (garante reset se SO estiver escuro) —— */
+html[data-theme-preference="light"] {
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-input-bg: var(--input-bg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-on-accent-dark: var(--on-accent-dark);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-placeholder: var(--placeholder);
+  --color-star-empty: var(--star-empty);
+  --color-on-accent: var(--on-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a,
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+select,
+label[for],
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[disabled] {
+  cursor: not-allowed;
+}
+
+select option {
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+@keyframes field-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-3px);
+  }
+  40%,
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.animate-field-shake {
+  animation: field-shake 0.35s ease-in-out;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--border);
+}
+
+.nav-glass-btn {
+  background: var(--nav-btn-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--nav-btn-border);
+  box-shadow: var(--nav-btn-shadow), var(--nav-btn-inset);
+}
+
+.nav-link {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link:focus,
+.nav-link:focus-visible,
+.nav-link:active {
+  outline: none;
+  box-shadow: none;
+}
+
+html[data-theme-preference="high-contrast"] .glass,
+html[data-theme-preference="high-contrast"] .nav-glass-btn {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-contrast: more) {
+  html[data-theme-preference="system"] .glass,
+  html[data-theme-preference="system"] .nav-glass-btn {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@keyframes heart-fly {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(var(--hs, 1));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--hx, 0px)),
+        calc(-50% + var(--hy, -60px))
+      )
+      scale(calc(var(--hs, 1) * 0.4)) rotate(var(--hr, 0deg));
+  }
+}
+
+@keyframes heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.heart-fly {
+  animation: heart-fly 0.75s ease-out forwards;
+}
+
+.heart-pop {
+  animation: heart-pop 0.35s ease-out;
+}
+
+.overlay-backdrop {
+  background: var(--overlay);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-nav {
+  box-shadow: var(--shadow-nav);
+}
+
+.media-placeholder {
+  background: var(--placeholder);
+}
+
+.bg-empty-state {
+  background: var(--empty-state-bg);
+}
+
+/* VLibras acima da navbar */
+[vw-access-button="true"] {
+  z-index: 30 !important;
+}
+
+[vw-plugin-wrapper="true"] {
+  z-index: 40 !important;
 }
