@@ -15,7 +15,8 @@ import type {
 } from "./types";
 import type { RegistrationContext } from "@/lib/device-context";
 
-const API_BASE = "/api";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "/api";
 
 export class ApiError extends Error {
   constructor(

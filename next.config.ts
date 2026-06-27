@@ -15,10 +15,18 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return [];
+    }
+
+    const apiProxy =
+      process.env.API_PROXY_URL?.replace(/\/$/, "") ??
+      "http://localhost:3001";
+
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:3001/:path*",
+        destination: `${apiProxy}/:path*`,
       },
     ];
   },
