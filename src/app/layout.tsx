@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
@@ -52,6 +53,7 @@ export default function RootLayout({
             <VLibrasWidget />
           </AccessibilityProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
