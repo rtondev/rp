@@ -22,10 +22,48 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
+    public code?: string,
   ) {
     super(message);
     this.name = "ApiError";
   }
+}
+
+function parseApiErrorBody(body: unknown): { message: string; code?: string } {
+  if (!body || typeof body !== "object") {
+    return { message: "Erro na requisição" };
+  }
+
+  const record = body as Record<string, unknown>;
+  const rawMessage = record.message;
+
+  if (typeof rawMessage === "string") {
+    return {
+      message: rawMessage,
+      code: typeof record.code === "string" ? record.code : undefined,
+    };
+  }
+
+  if (rawMessage && typeof rawMessage === "object") {
+    const nested = rawMessage as Record<string, unknown>;
+    const message =
+      typeof nested.message === "string"
+        ? nested.message
+        : Array.isArray(nested.message)
+          ? String(nested.message[0])
+          : "Erro na requisição";
+
+    return {
+      message,
+      code: typeof nested.code === "string" ? nested.code : undefined,
+    };
+  }
+
+  if (Array.isArray(rawMessage)) {
+    return { message: String(rawMessage[0] ?? "Erro na requisição") };
+  }
+
+  return { message: "Erro na requisição" };
 }
 
 function getToken(): string | null {
@@ -47,13 +85,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     let message = "Erro na requisição";
+    let code: string | undefined;
     try {
       const body = await res.json();
-      message = body.message ?? (Array.isArray(body.message) ? body.message[0] : message);
+      const parsed = parseApiErrorBody(body);
+      message = parsed.message;
+      code = parsed.code;
     } catch {
       message = res.statusText;
     }
-    throw new ApiError(message, res.status);
+    throw new ApiError(message, res.status, code);
   }
 
   if (res.status === 204) return undefined as T;

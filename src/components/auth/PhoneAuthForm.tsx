@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,11 +9,14 @@ import { LoginShowcase } from "@/components/auth/LoginShowcase";
 import { PhoneInput } from "@/components/auth/PhoneInput";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { api } from "@/lib/api";
+import { Spin } from "@/components/ui/Spin";
+import { ApiError } from "@/lib/api";
 import { isCompletePhone, normalizePhoneDigits } from "@/lib/phone";
 import {
   collectRegistrationContext,
   getGeoErrorMessage,
+  tryCollectRegistrationContext,
+  type RegistrationContext,
 } from "@/lib/device-context";
 import { toastError } from "@/lib/toast";
 import { getErrorMessage, required } from "@/lib/validate";
@@ -39,6 +42,56 @@ export function PhoneAuthForm({
   const [phoneError, setPhoneError] = useState<string>();
   const [nameError, setNameError] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const [geoReady, setGeoReady] = useState(false);
+  const geoContextRef = useRef<RegistrationContext | null>(null);
+  const geoPromiseRef = useRef<Promise<RegistrationContext | null> | null>(null);
+
+  const safeNext = nextPath.startsWith("/") ? nextPath : "/";
+
+  function goNext() {
+    setRedirecting(true);
+    router.replace(safeNext);
+  }
+
+  useEffect(() => {
+    if (step !== "name") return;
+
+    let cancelled = false;
+    setGeoReady(false);
+    geoContextRef.current = null;
+
+    const promise = tryCollectRegistrationContext();
+    geoPromiseRef.current = promise;
+
+    promise.then((context) => {
+      if (cancelled) return;
+      geoContextRef.current = context;
+      setGeoReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [step]);
+
+  async function resolveRegistrationContext(): Promise<RegistrationContext | undefined> {
+    if (geoContextRef.current) return geoContextRef.current;
+
+    if (geoPromiseRef.current) {
+      const cached = await geoPromiseRef.current;
+      if (cached) {
+        geoContextRef.current = cached;
+        return cached;
+      }
+    }
+
+    if (proximityTarget) {
+      return collectRegistrationContext();
+    }
+
+    return (await tryCollectRegistrationContext()) ?? undefined;
+  }
 
   async function handlePhoneSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,17 +107,15 @@ export function PhoneAuthForm({
 
     try {
       const normalized = normalizePhoneDigits(phone);
-      const check = await api.auth.phoneCheck(normalized);
-
-      if (check.exists) {
-        await phoneSession({ phone: normalized });
-        router.replace(nextPath.startsWith("/") ? nextPath : "/");
+      await phoneSession({ phone: normalized });
+      goNext();
+    } catch (err) {
+      if (err instanceof ApiError && err.code === "NEEDS_NAME") {
+        setStep("name");
         return;
       }
 
-      setStep("name");
-    } catch (err) {
-      const message = getErrorMessage(err, "Não foi possível verificar o celular");
+      const message = getErrorMessage(err, "Não foi possível entrar com este celular");
       setPhoneError(message);
       toastError(message);
     } finally {
@@ -86,8 +137,26 @@ export function PhoneAuthForm({
     setNameError(undefined);
 
     try {
-      const registrationContext = await collectRegistrationContext();
       const normalized = normalizePhoneDigits(phone);
+      let registrationContext: RegistrationContext | undefined;
+
+      try {
+        registrationContext = await resolveRegistrationContext();
+      } catch (geoErr) {
+        if (proximityTarget) {
+          const message = getGeoErrorMessage(geoErr);
+          setNameError(message);
+          toastError(message);
+          return;
+        }
+      }
+
+      if (proximityTarget && !registrationContext) {
+        const message = "Permita o acesso à localização para concluir o cadastro neste local";
+        setNameError(message);
+        toastError(message);
+        return;
+      }
 
       await phoneSession({
         phone: normalized,
@@ -96,7 +165,7 @@ export function PhoneAuthForm({
         proximityTarget,
       });
 
-      router.replace(nextPath.startsWith("/") ? nextPath : "/");
+      goNext();
     } catch (err) {
       const geoMessage = getGeoErrorMessage(err);
       const message = getErrorMessage(err, geoMessage);
@@ -106,6 +175,16 @@ export function PhoneAuthForm({
       setLoading(false);
     }
   }
+
+  if (redirecting) {
+    return <Spin fullScreen loop={false} label="Entrando..." />;
+  }
+
+  const registerLoadingLabel = proximityTarget
+    ? !geoReady
+      ? "Obtendo localização..."
+      : "Criando conta..."
+    : "Criando conta...";
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
@@ -120,7 +199,9 @@ export function PhoneAuthForm({
             <p className="mt-2 text-[14px] leading-relaxed text-muted">
               {step === "phone"
                 ? "Sem senha e sem código. Só o número do celular."
-                : "Como podemos te chamar? Vamos usar sua localização só para registrar de onde você entrou."}
+                : proximityTarget
+                  ? "Seu nome e a localização no local — precisamos confirmar que você está perto."
+                  : "Como podemos te chamar? Rápido e sem burocracia."}
             </p>
           </div>
 
@@ -140,7 +221,7 @@ export function PhoneAuthForm({
                 required
               />
               <Button type="submit" fullWidth disabled={loading} className="mt-1">
-                {loading ? "Verificando..." : "Continuar"}
+                {loading ? "Entrando..." : "Continuar"}
               </Button>
             </form>
           ) : (
@@ -155,6 +236,7 @@ export function PhoneAuthForm({
                 value={name}
                 error={nameError}
                 autoComplete="name"
+                autoFocus
                 placeholder="Como você quer aparecer"
                 onChange={(e) => {
                   setName(e.target.value);
@@ -162,14 +244,19 @@ export function PhoneAuthForm({
                 }}
                 required
               />
-              <p className="text-xs leading-relaxed text-muted">
-                Ao continuar, coletamos sua localização, rede e informações básicas
-                do dispositivo para registrar de onde você entrou.
-                {proximityTarget &&
-                  " Você precisa estar a até 100m do local para concluir o cadastro."}
-              </p>
+              {proximityTarget ? (
+                <p className="text-xs leading-relaxed text-muted">
+                  {geoReady
+                    ? "Localização pronta. Você precisa estar a até 100 m do local."
+                    : "Aguardando permissão de localização em segundo plano…"}
+                </p>
+              ) : (
+                <p className="text-xs leading-relaxed text-muted">
+                  A localização é opcional e ajuda a melhorar o serviço na região.
+                </p>
+              )}
               <Button type="submit" fullWidth disabled={loading}>
-                {loading ? "Criando conta..." : "Criar conta e entrar"}
+                {loading ? registerLoadingLabel : "Criar conta e entrar"}
               </Button>
               <Button
                 type="button"
@@ -180,6 +267,9 @@ export function PhoneAuthForm({
                   setStep("phone");
                   setName("");
                   setNameError(undefined);
+                  geoContextRef.current = null;
+                  geoPromiseRef.current = null;
+                  setGeoReady(false);
                 }}
               >
                 Voltar
@@ -190,7 +280,7 @@ export function PhoneAuthForm({
           <p className="mt-6 text-center text-sm text-muted">
             Gestor ou admin?{" "}
             <Link
-              href={`/acesso-profissional?next=${encodeURIComponent(nextPath)}`}
+              href={`/acesso-profissional?next=${encodeURIComponent(safeNext)}`}
               className="font-medium text-accent hover:underline"
             >
               Entrar com e-mail

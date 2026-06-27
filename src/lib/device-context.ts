@@ -41,19 +41,37 @@ export function collectDeviceMeta(): DeviceMeta {
   };
 }
 
-export function getCurrentPosition(): Promise<GeolocationPosition> {
+type GeoOptions = {
+  enableHighAccuracy: boolean;
+  timeout: number;
+  maximumAge: number;
+};
+
+function getCurrentPositionWith(options: GeoOptions): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
       reject(new Error("Seu dispositivo não suporta geolocalização"));
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: true,
-      timeout: 20_000,
-      maximumAge: 0,
-    });
+    navigator.geolocation.getCurrentPosition(resolve, reject, options);
   });
+}
+
+export async function getCurrentPosition(): Promise<GeolocationPosition> {
+  try {
+    return await getCurrentPositionWith({
+      enableHighAccuracy: false,
+      timeout: 5_000,
+      maximumAge: 120_000,
+    });
+  } catch {
+    return getCurrentPositionWith({
+      enableHighAccuracy: true,
+      timeout: 8_000,
+      maximumAge: 60_000,
+    });
+  }
 }
 
 export async function collectRegistrationContext(): Promise<RegistrationContext> {
@@ -66,6 +84,14 @@ export async function collectRegistrationContext(): Promise<RegistrationContext>
     accuracy: position.coords.accuracy,
     ...deviceMeta,
   };
+}
+
+export async function tryCollectRegistrationContext(): Promise<RegistrationContext | null> {
+  try {
+    return await collectRegistrationContext();
+  } catch {
+    return null;
+  }
 }
 
 export async function collectSubmitContext(): Promise<SubmitContext> {

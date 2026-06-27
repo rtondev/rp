@@ -31,43 +31,20 @@ import {
   MockSignalScreen,
 } from "@/components/apresentacao/ApresentacaoMockScreens";
 
-type SlideTone = "dark" | "light" | "accent" | "sun";
-
 type Slide = {
   id: string;
-  tone: SlideTone;
   render: () => React.ReactNode;
 };
 
-const toneStyles: Record<
-  SlideTone,
-  { bg: string; text: string; muted: string; badge: string }
-> = {
-  dark: {
-    bg: "bg-accent-dark",
-    text: "text-on-accent-dark",
-    muted: "text-on-accent-dark/70",
-    badge: "bg-white/10 text-on-accent-dark ring-white/20",
-  },
-  light: {
-    bg: "bg-background",
-    text: "text-accent-dark",
-    muted: "text-muted",
-    badge: "bg-accent/10 text-accent ring-accent/20",
-  },
-  accent: {
-    bg: "bg-accent",
-    text: "text-on-accent",
-    muted: "text-on-accent/85",
-    badge: "bg-white/15 text-on-accent ring-white/25",
-  },
-  sun: {
-    bg: "bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600",
-    text: "text-white",
-    muted: "text-white/85",
-    badge: "bg-white/20 text-white ring-white/30",
-  },
-};
+const slide = {
+  bg: "bg-accent-dark",
+  text: "text-on-accent-dark",
+  muted: "text-on-accent-dark/70",
+  card: "rounded-2xl bg-white/8 ring-1 ring-white/10",
+  badge: "bg-accent/20 text-accent ring-1 ring-accent/30",
+  step: "bg-accent text-on-accent",
+  eyebrow: "text-accent",
+} as const;
 
 function SlideShell({
   tone,
@@ -77,27 +54,24 @@ function SlideShell({
   children,
   className,
 }: {
-  tone: SlideTone;
   eyebrow?: string;
   title?: string;
   subtitle?: string;
   children: React.ReactNode;
   className?: string;
 }) {
-  const s = toneStyles[tone];
-
   return (
     <div
       className={cn(
         "flex h-full min-h-[100dvh] w-full flex-col px-6 py-10 sm:px-12 sm:py-14",
-        s.bg,
-        s.text,
+        slide.bg,
+        slide.text,
         className,
       )}
     >
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center">
         {eyebrow && (
-          <p className={cn("text-xs font-bold tracking-[0.2em] uppercase", s.muted)}>
+          <p className={cn("text-xs font-bold tracking-[0.2em] uppercase", slide.eyebrow)}>
             {eyebrow}
           </p>
         )}
@@ -107,7 +81,7 @@ function SlideShell({
           </h2>
         )}
         {subtitle && (
-          <p className={cn("mt-3 max-w-2xl text-base leading-relaxed sm:text-lg", s.muted)}>
+          <p className={cn("mt-3 max-w-2xl text-base leading-relaxed sm:text-lg", slide.muted)}>
             {subtitle}
           </p>
         )}
@@ -117,15 +91,7 @@ function SlideShell({
   );
 }
 
-function StepList({
-  items,
-  tone,
-}: {
-  items: { n: number; text: string }[];
-  tone: SlideTone;
-}) {
-  const muted = toneStyles[tone].muted;
-
+function StepList({ items }: { items: { n: number; text: string }[] }) {
   return (
     <ol className="flex flex-col gap-3 sm:gap-4">
       {items.map((item) => (
@@ -133,16 +99,14 @@ function StepList({
           <span
             className={cn(
               "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-              tone === "accent"
-                ? "bg-white/20 text-on-accent"
-                : tone === "dark"
-                  ? "bg-accent text-on-accent"
-                  : "bg-accent text-on-accent",
+              slide.step,
             )}
           >
             {item.n}
           </span>
-          <span className={cn("pt-1 text-sm leading-relaxed sm:text-base", muted)}>{item.text}</span>
+          <span className={cn("pt-1 text-sm leading-relaxed sm:text-base", slide.muted)}>
+            {item.text}
+          </span>
         </li>
       ))}
     </ol>
@@ -152,9 +116,9 @@ function StepList({
 const SLIDES: Slide[] = [
   {
     id: "cover",
-    tone: "sun",
+    tone: "accent",
     render: () => (
-      <SlideShell tone="sun" className="text-center">
+      <SlideShell tone="accent" className="text-center">
         <div className="flex flex-col items-center gap-8">
           <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold tracking-widest uppercase ring-1 ring-white/30">
             <Sun size={16} weight="fill" />
@@ -172,17 +136,17 @@ const SLIDES: Slide[] = [
 
           <div>
             <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">Rota Potiguar</h1>
-            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/90 sm:text-xl">
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed opacity-90 sm:text-xl">
               Sistema de recuperação de experiência turística no Rio Grande do Norte.
             </p>
           </div>
 
-          <div className="rounded-2xl bg-black/15 px-6 py-4 ring-1 ring-white/20">
-            <p className="text-sm font-bold text-white">Equipe Bravos</p>
-            <p className="mt-1 text-xs tracking-wide text-white/80 uppercase">
+          <div className="rounded-2xl bg-white/15 px-6 py-4 ring-1 ring-white/25">
+            <p className="text-sm font-bold">Equipe Bravos</p>
+            <p className="mt-1 text-xs tracking-wide opacity-85 uppercase">
               Trilha Turismo · Eixo 1
             </p>
-            <p className="mt-3 text-sm text-white/90">Clayton · Igor · Kev · Nonato</p>
+            <p className="mt-3 text-sm opacity-90">Clayton · Igor · Kevem · Nonato</p>
           </div>
         </div>
       </SlideShell>
@@ -433,7 +397,7 @@ const SLIDES: Slide[] = [
           </p>
           <div className="text-center">
             <p className="text-sm font-semibold opacity-90">Equipe Bravos · Trilha Turismo · Eixo 1</p>
-            <p className="mt-2 text-sm opacity-75">Clayton · Igor · Kev · Nonato</p>
+            <p className="mt-2 text-sm opacity-75">Clayton · Igor · Kevem · Nonato</p>
           </div>
 
           <div className="flex flex-col items-center gap-2">

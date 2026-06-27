@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhoneAuthForm } from "@/components/auth/PhoneAuthForm";
+import { Spin } from "@/components/ui/Spin";
 
 function EntrarPageContent() {
   const { user, loading } = useAuth();
@@ -11,14 +12,18 @@ function EntrarPageContent() {
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") ?? "/";
   const placeId = searchParams.get("placeId");
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
+      setRedirecting(true);
       router.replace(nextPath.startsWith("/") ? nextPath : "/");
     }
   }, [loading, user, router, nextPath]);
 
-  if (loading || user) return null;
+  if (loading || redirecting || user) {
+    return <Spin fullScreen loop={false} label="Entrando..." />;
+  }
 
   return (
     <PhoneAuthForm
@@ -30,7 +35,7 @@ function EntrarPageContent() {
 
 export default function EntrarPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Spin fullScreen loop={false} label="Carregando..." />}>
       <EntrarPageContent />
     </Suspense>
   );

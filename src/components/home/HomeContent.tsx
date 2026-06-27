@@ -194,7 +194,7 @@ export function HomeContent() {
       <section className="mt-10 rounded-2xl border border-border bg-surface-subtle px-5 py-4">
         <p className="text-xs font-semibold tracking-wide text-accent uppercase">Equipe Bravos</p>
         <p className="mt-1 text-sm text-muted">Trilha Turismo · Eixo 1</p>
-        <p className="mt-3 text-sm font-medium text-accent-dark">Clayton · Igor · Kev · Nonato</p>
+        <p className="mt-3 text-sm font-medium text-accent-dark">Clayton · Igor · Kevem · Nonato</p>
       </section>
     </div>
   );
