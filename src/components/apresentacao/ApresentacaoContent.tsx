@@ -31,20 +31,39 @@ import {
   MockSignalScreen,
 } from "@/components/apresentacao/ApresentacaoMockScreens";
 
+type SlideTone = "dark" | "light" | "accent";
+
 type Slide = {
   id: string;
   render: () => React.ReactNode;
 };
 
-const slide = {
-  bg: "bg-accent-dark",
-  text: "text-on-accent-dark",
-  muted: "text-on-accent-dark/70",
-  card: "rounded-2xl bg-white/8 ring-1 ring-white/10",
-  badge: "bg-accent/20 text-accent ring-1 ring-accent/30",
-  step: "bg-accent text-on-accent",
-  eyebrow: "text-accent",
-} as const;
+const toneStyles: Record<
+  SlideTone,
+  { bg: string; text: string; muted: string; step: string; eyebrow: string }
+> = {
+  dark: {
+    bg: "bg-accent-dark",
+    text: "text-on-accent-dark",
+    muted: "text-on-accent-dark/70",
+    step: "bg-accent text-on-accent",
+    eyebrow: "text-accent",
+  },
+  light: {
+    bg: "bg-background",
+    text: "text-accent-dark",
+    muted: "text-muted",
+    step: "bg-accent text-on-accent",
+    eyebrow: "text-accent",
+  },
+  accent: {
+    bg: "bg-accent",
+    text: "text-on-accent",
+    muted: "text-on-accent/85",
+    step: "bg-white/20 text-on-accent",
+    eyebrow: "text-on-accent/80",
+  },
+};
 
 function SlideShell({
   tone,
@@ -54,24 +73,27 @@ function SlideShell({
   children,
   className,
 }: {
+  tone: SlideTone;
   eyebrow?: string;
   title?: string;
   subtitle?: string;
   children: React.ReactNode;
   className?: string;
 }) {
+  const s = toneStyles[tone];
+
   return (
     <div
       className={cn(
         "flex h-full min-h-[100dvh] w-full flex-col px-6 py-10 sm:px-12 sm:py-14",
-        slide.bg,
-        slide.text,
+        s.bg,
+        s.text,
         className,
       )}
     >
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center">
         {eyebrow && (
-          <p className={cn("text-xs font-bold tracking-[0.2em] uppercase", slide.eyebrow)}>
+          <p className={cn("text-xs font-bold tracking-[0.2em] uppercase", s.eyebrow)}>
             {eyebrow}
           </p>
         )}
@@ -81,7 +103,7 @@ function SlideShell({
           </h2>
         )}
         {subtitle && (
-          <p className={cn("mt-3 max-w-2xl text-base leading-relaxed sm:text-lg", slide.muted)}>
+          <p className={cn("mt-3 max-w-2xl text-base leading-relaxed sm:text-lg", s.muted)}>
             {subtitle}
           </p>
         )}
@@ -91,7 +113,15 @@ function SlideShell({
   );
 }
 
-function StepList({ items }: { items: { n: number; text: string }[] }) {
+function StepList({
+  items,
+  tone,
+}: {
+  items: { n: number; text: string }[];
+  tone: SlideTone;
+}) {
+  const s = toneStyles[tone];
+
   return (
     <ol className="flex flex-col gap-3 sm:gap-4">
       {items.map((item) => (
@@ -99,12 +129,12 @@ function StepList({ items }: { items: { n: number; text: string }[] }) {
           <span
             className={cn(
               "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-              slide.step,
+              s.step,
             )}
           >
             {item.n}
           </span>
-          <span className={cn("pt-1 text-sm leading-relaxed sm:text-base", slide.muted)}>
+          <span className={cn("pt-1 text-sm leading-relaxed sm:text-base", s.muted)}>
             {item.text}
           </span>
         </li>
@@ -116,7 +146,6 @@ function StepList({ items }: { items: { n: number; text: string }[] }) {
 const SLIDES: Slide[] = [
   {
     id: "cover",
-    tone: "accent",
     render: () => (
       <SlideShell tone="accent" className="text-center">
         <div className="flex flex-col items-center gap-8">
@@ -154,7 +183,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "problematizacao",
-    tone: "dark",
     render: () => (
       <SlideShell
         tone="dark"
@@ -192,7 +220,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "solucao",
-    tone: "accent",
     render: () => (
       <SlideShell
         tone="accent"
@@ -216,7 +243,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "demo-home",
-    tone: "light",
     render: () => (
       <DemoSlideLayout
         step="Na prática · 1/5"
@@ -228,7 +254,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "demo-locais",
-    tone: "light",
     render: () => (
       <DemoSlideLayout
         step="Na prática · 2/5"
@@ -241,7 +266,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "demo-local",
-    tone: "light",
     render: () => (
       <DemoSlideLayout
         step="Na prática · 3/5"
@@ -253,7 +277,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "demo-sinal",
-    tone: "light",
     render: () => (
       <DemoSlideLayout
         step="Na prática · 4/5"
@@ -266,7 +289,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "demo-resposta",
-    tone: "light",
     render: () => (
       <DemoSlideLayout
         step="Na prática · 5/5"
@@ -283,7 +305,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "objetivo",
-    tone: "light",
     render: () => (
       <SlideShell
         tone="light"
@@ -329,7 +350,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "escalabilidade",
-    tone: "dark",
     render: () => (
       <SlideShell
         tone="dark"
@@ -380,7 +400,6 @@ const SLIDES: Slide[] = [
   },
   {
     id: "obrigado",
-    tone: "dark",
     render: () => (
       <SlideShell tone="dark" className="text-center">
         <div className="flex flex-col items-center gap-6">
