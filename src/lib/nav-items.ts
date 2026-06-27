@@ -12,12 +12,14 @@ import {
   type Icon,
 } from "@phosphor-icons/react";
 import type { UserRole } from "@/lib/types";
+import type { NavTone } from "@/lib/nav-tones";
 
 export type NavItem = {
   href: string;
   label: string;
   icon: Icon;
   match: (pathname: string) => boolean;
+  tone?: NavTone;
 };
 
 const turistaNav: NavItem[] = [
@@ -42,6 +44,7 @@ const turistaNav: NavItem[] = [
     label: "Novo sinal",
     icon: QrCode,
     match: (p) => p.startsWith("/sinalizar"),
+    tone: "signal",
   },
   {
     href: "/minhas-sinalizacoes",

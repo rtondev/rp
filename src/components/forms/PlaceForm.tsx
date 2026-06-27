@@ -11,11 +11,14 @@ import {
   OpeningHoursEditor,
   openingHoursFromUnknown,
 } from "@/components/places/OpeningHoursEditor";
+import { PlaceLocationPicker } from "@/components/places/PlaceLocationPicker";
 import { createEmptyWeeklyHours } from "@/lib/opening-hours";
 import { toastError } from "@/lib/toast";
 import { getErrorMessage, required } from "@/lib/validate";
 
-type PlaceFormErrors = Partial<Record<"title" | "description" | "latitude" | "longitude", string>>;
+type PlaceFormErrors = Partial<
+  Record<"title" | "description" | "location", string>
+>;
 
 export interface PlaceFormData {
   title: string;
@@ -65,11 +68,15 @@ export function PlaceForm({
   }
 
   function validate() {
+    const locationError =
+      !form.latitude || !form.longitude
+        ? "Busque um endereço ou use sua localização atual"
+        : undefined;
+
     const next: PlaceFormErrors = {
       title: required(form.title, "Informe o título do local"),
       description: required(form.description, "Informe a descrição do local"),
-      latitude: required(form.latitude, "Informe a latitude"),
-      longitude: required(form.longitude, "Informe a longitude"),
+      location: locationError,
     };
 
     const filtered = Object.fromEntries(
@@ -139,38 +146,17 @@ export function PlaceForm({
         options={categories.map((c) => ({ value: c.id, label: c.name }))}
         required
       />
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="Latitude"
-          type="number"
-          step="any"
-          placeholder="Digite aqui a latitude"
-          value={form.latitude}
-          error={errors.latitude}
-          onChange={(e) => {
-            setForm({ ...form, latitude: e.target.value });
-            clearError("latitude");
-          }}
-          required
-        />
-        <Input
-          label="Longitude"
-          type="number"
-          step="any"
-          placeholder="Digite aqui a longitude"
-          value={form.longitude}
-          error={errors.longitude}
-          onChange={(e) => {
-            setForm({ ...form, longitude: e.target.value });
-            clearError("longitude");
-          }}
-          required
-        />
-      </div>
-      <Input
-        label="Endereço"
-        value={form.address}
-        onChange={(e) => setForm({ ...form, address: e.target.value })}
+      <PlaceLocationPicker
+        value={{
+          latitude: form.latitude,
+          longitude: form.longitude,
+          address: form.address,
+        }}
+        error={errors.location}
+        onChange={(location) => {
+          setForm({ ...form, ...location });
+          clearError("location");
+        }}
       />
       <ImageUpload
         label="Imagem do local"

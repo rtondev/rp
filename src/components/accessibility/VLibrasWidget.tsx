@@ -2,15 +2,13 @@
 
 import Script from "next/script";
 import { useEffect, useRef } from "react";
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 
 const VLIBRAS_SRC = "https://vlibras.gov.br/app/vlibras-plugin.js";
 const VLIBRAS_ROOT = "https://vlibras.gov.br/app";
 
-/**
- * Widget oficial VLibras — carregado uma vez, fora do fluxo de rota.
- * Script com strategy afterInteractive; init idempotente.
- */
 export function VLibrasWidget() {
+  const { vlibrasEnabled } = useAccessibility();
   const initialized = useRef(false);
 
   const initWidget = () => {
@@ -23,10 +21,19 @@ export function VLibrasWidget() {
   };
 
   useEffect(() => {
+    if (!vlibrasEnabled) {
+      initialized.current = false;
+    }
+  }, [vlibrasEnabled]);
+
+  useEffect(() => {
+    if (!vlibrasEnabled) return;
     if (window.VLibras) {
       initWidget();
     }
-  }, []);
+  }, [vlibrasEnabled]);
+
+  if (!vlibrasEnabled) return null;
 
   return (
     <>

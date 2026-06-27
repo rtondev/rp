@@ -179,8 +179,8 @@ export function PlaceQuickActions({
         onClick={
           isLoggedIn ? undefined : () => goLogin(`/locais/${placeId}/sinalizar`)
         }
-        iconClassName="bg-amber-500/15 text-amber-600"
-        tileClassName="border-amber-500/25 bg-amber-500/[0.08] hover:bg-amber-500/[0.12]"
+        iconClassName="bg-accent/15 text-accent"
+        tileClassName="border-accent/25 bg-accent/[0.08] hover:bg-accent/[0.12]"
       />
 
       <ActionTile

@@ -341,7 +341,42 @@ html[data-theme-preference="high-contrast"] .nav-glass-btn {
   background: var(--empty-state-bg);
 }
 
-/* VLibras acima da navbar */
+/* Leaflet — cores do tema do app */
+.leaflet-container {
+  background: var(--surface-subtle);
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface);
+  color: var(--accent-dark);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.leaflet-popup-content {
+  margin: 10px 12px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 88%, transparent) !important;
+  color: var(--muted) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--accent) !important;
+}
+
+.leaflet-tooltip {
+  background: var(--surface);
+  color: var(--accent-dark);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
 [vw-access-button="true"] {
   z-index: 30 !important;
 }

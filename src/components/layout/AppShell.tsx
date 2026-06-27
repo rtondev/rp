@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import type { Icon } from "@phosphor-icons/react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getNavItems } from "@/lib/nav-items";
+import { NAV_TONE_STYLES, type NavTone } from "@/lib/nav-tones";
 import { cn } from "@/lib/cn";
 
 function NavLink({
@@ -14,13 +15,18 @@ function NavLink({
   icon: NavIcon,
   active,
   compact,
+  tone = "default",
 }: {
   href: string;
   label: string;
   icon: Icon;
   active: boolean;
   compact?: boolean;
+  tone?: NavTone;
 }) {
+  const styles = NAV_TONE_STYLES[tone];
+  const tinted = tone !== "default";
+
   return (
     <Link
       href={href}
@@ -28,30 +34,36 @@ function NavLink({
     >
       <span
         className={cn(
-          "flex flex-col items-center gap-0.5 rounded-full py-1.5 transition-[background,transform,padding] duration-200 ease-out",
+          "flex flex-col items-center gap-0.5 rounded-full py-1.5 transition-[background,transform,padding,box-shadow] duration-200 ease-out",
           active
             ? cn(
-                "nav-glass-btn",
+                styles.bgActive,
                 compact ? "min-w-[3.25rem] px-2.5" : "min-w-[4.5rem] px-5",
               )
-            : compact
-              ? "px-1.5 active:scale-95 active:opacity-80"
-              : "px-3 active:scale-95 active:opacity-80",
+            : tinted
+              ? cn(
+                  styles.bgIdle,
+                  compact ? "min-w-[3.25rem] px-2.5" : "min-w-[4.25rem] px-4",
+                )
+              : compact
+                ? "px-1.5 active:scale-95 active:opacity-80"
+                : "px-3 active:scale-95 active:opacity-80",
+          !active && tinted && "active:scale-95",
         )}
       >
         <NavIcon
           size={compact ? 18 : 20}
-          weight={active ? "fill" : "regular"}
+          weight={active ? "fill" : "duotone"}
           className={cn(
             "shrink-0 transition-colors",
-            active ? "text-accent-dark" : "text-muted",
+            active ? styles.iconActive : styles.iconIdle,
           )}
         />
         <span
           className={cn(
             "leading-none transition-colors",
             compact ? "text-[9px]" : "text-[10px]",
-            active ? "font-semibold text-accent-dark" : "text-muted",
+            active ? styles.labelActive : styles.labelIdle,
           )}
         >
           {label}
@@ -73,7 +85,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/login" ||
     pathname === "/register" ||
     pathname === "/acesso-profissional" ||
-    pathname === "/spin";
+    pathname === "/spin" ||
+    pathname === "/apresentacao";
 
   if (isAuthPage) {
     return <>{children}</>;
@@ -93,6 +106,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               icon={item.icon}
               active={item.match(pathname)}
               compact={compactNav}
+              tone={item.tone}
             />
           ))}
         </div>

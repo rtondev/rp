@@ -18,6 +18,7 @@ import { formatHomeGreeting } from "@/lib/greeting";
 import type { UserRole } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { HomeLastSignal } from "@/components/home/HomeLastSignal";
+import { HomeNearbyMapSection } from "@/components/home/HomeNearbyMapSection";
 
 type QuickItem = {
   href: string;
@@ -75,25 +76,29 @@ function getQuickItems(role: UserRole | null | undefined): QuickItem[] {
         href: "/locais",
         label: "Locais",
         icon: MapPin,
-        iconClassName: "bg-accent/15 text-accent",
+        iconClassName: "bg-sky-500/15 text-sky-600",
+        tileClassName: "border-sky-500/25 bg-sky-500/[0.08] hover:bg-sky-500/[0.12]",
       },
       {
         href: "/favoritos",
         label: "Favoritos",
         icon: Heart,
         iconClassName: "bg-rose-500/15 text-rose-500",
+        tileClassName: "border-rose-500/25 bg-rose-500/[0.08] hover:bg-rose-500/[0.12]",
       },
       {
         href: "/sinalizar",
         label: "Novo sinal",
         icon: QrCode,
-        iconClassName: "bg-violet-500/15 text-violet-600",
+        iconClassName: "bg-accent/15 text-accent",
+        tileClassName: "border-accent/25 bg-accent/[0.08] hover:bg-accent/[0.12]",
       },
       {
         href: "/minhas-sinalizacoes",
         label: "Sinais",
         icon: ChatCircleDots,
         iconClassName: "bg-amber-500/15 text-amber-600",
+        tileClassName: "border-amber-500/25 bg-amber-500/[0.08] hover:bg-amber-500/[0.12]",
       },
     ];
   }
@@ -170,6 +175,8 @@ export function HomeContent() {
         <p className="mt-2 text-sm text-muted">{getSubtitle(user?.role)}</p>
       </header>
 
+      <HomeNearbyMapSection />
+
       <section>
         <h2 className="mb-3 text-sm font-semibold text-accent-dark">
           Acesso rápido
@@ -183,6 +190,12 @@ export function HomeContent() {
 
       {user?.role === "TURISTA" && <HomeLastSignal mode="turista" />}
       {user?.role === "GESTOR" && <HomeLastSignal mode="gestor" />}
+
+      <section className="mt-10 rounded-2xl border border-border bg-surface-subtle px-5 py-4">
+        <p className="text-xs font-semibold tracking-wide text-accent uppercase">Equipe Bravos</p>
+        <p className="mt-1 text-sm text-muted">Trilha Turismo · Eixo 1</p>
+        <p className="mt-3 text-sm font-medium text-accent-dark">Clayton · Igor · Kev · Nonato</p>
+      </section>
     </div>
   );
 }

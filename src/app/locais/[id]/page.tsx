@@ -126,9 +126,6 @@ export default function LocalDetailPage() {
             {place.address}
           </p>
         )}
-        <p className="mt-1 text-xs text-muted">
-          {place.latitude}, {place.longitude}
-        </p>
         {links.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {links.map((link) => (
