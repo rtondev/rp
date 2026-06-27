@@ -7,8 +7,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Bell,
-  CaretLeft,
-  CaretRight,
   ChatCircleDots,
   Clock,
   Eye,
@@ -501,12 +499,6 @@ export function ApresentacaoContent() {
           <span className="text-xs font-medium">
             {index + 1} / {total}
           </span>
-        </div>
-
-        <div className="pointer-events-auto hidden max-w-xs items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-white backdrop-blur-md sm:flex">
-          <CaretLeft size={12} />
-          <span className="text-[10px] font-medium">← → ou espaço</span>
-          <CaretRight size={12} />
         </div>
 
         <div className="pointer-events-auto flex gap-1">
